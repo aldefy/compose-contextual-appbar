@@ -9,6 +9,10 @@
 
 When users long-press to select items, the top bar smoothly crossfades to show selection count and contextual actions (delete, share, archive). Back press exits selection mode.
 
+<p align="center">
+  <img src="assets/demo.gif" alt="Demo" width="360"/>
+</p>
+
 ## Installation
 
 ```kotlin
