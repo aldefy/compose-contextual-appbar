@@ -1,0 +1,47 @@
+public final class io/github/aldefy/contextualappbar/ComposableSingletons$MaterialContextualTopAppBarKt {
+	public static final field INSTANCE Lio/github/aldefy/contextualappbar/ComposableSingletons$MaterialContextualTopAppBarKt;
+	public fun <init> ()V
+	public final fun getLambda$-1145743055$contextual_appbar ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$2009804583$contextual_appbar ()Lkotlin/jvm/functions/Function3;
+}
+
+public final class io/github/aldefy/contextualappbar/ContextualAnimationSpec {
+	public static final field $stable I
+	public static final field INSTANCE Lio/github/aldefy/contextualappbar/ContextualAnimationSpec;
+	public final fun defaultTransition ()Landroidx/compose/animation/ContentTransform;
+	public final fun getDefaultDurationMillis ()I
+}
+
+public final class io/github/aldefy/contextualappbar/ContextualTopAppBarColors {
+	public static final field $stable I
+	public synthetic fun <init> (JJJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component2-0d7_KjU ()J
+	public final fun component3-0d7_KjU ()J
+	public final fun component4-0d7_KjU ()J
+	public final fun copy-jRlVdoo (JJJJ)Lio/github/aldefy/contextualappbar/ContextualTopAppBarColors;
+	public static synthetic fun copy-jRlVdoo$default (Lio/github/aldefy/contextualappbar/ContextualTopAppBarColors;JJJJILjava/lang/Object;)Lio/github/aldefy/contextualappbar/ContextualTopAppBarColors;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContextualActionIconColor-0d7_KjU ()J
+	public final fun getContextualContainerColor-0d7_KjU ()J
+	public final fun getContextualContentColor-0d7_KjU ()J
+	public final fun getContextualNavigationIconColor-0d7_KjU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/aldefy/contextualappbar/ContextualTopAppBarDefaults {
+	public static final field $stable I
+	public static final field INSTANCE Lio/github/aldefy/contextualappbar/ContextualTopAppBarDefaults;
+	public final fun colors-ro_MJ88 (JJJJLandroidx/compose/runtime/Composer;II)Lio/github/aldefy/contextualappbar/ContextualTopAppBarColors;
+	public final fun defaultTransition ()Landroidx/compose/animation/ContentTransform;
+}
+
+public final class io/github/aldefy/contextualappbar/ContextualTopAppBarKt {
+	public static final fun ContextualTopAppBar (ILkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function2;Landroidx/compose/ui/Modifier;ZLkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class io/github/aldefy/contextualappbar/MaterialContextualTopAppBarKt {
+	public static final fun MaterialContextualTopAppBar (ILkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function3;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function3;Lio/github/aldefy/contextualappbar/ContextualTopAppBarColors;ZLkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;II)V
+}
+
