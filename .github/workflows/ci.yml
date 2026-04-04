@@ -1,0 +1,25 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: zulu
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Build library
+        run: ./gradlew :contextual-appbar:build
+      - name: Run tests
+        run: ./gradlew :contextual-appbar:allTests
+      - name: API compatibility check
+        run: ./gradlew :contextual-appbar:apiCheck
+      - name: Build sample
+        run: ./gradlew :sample:assembleDebug :sample:desktopJar
