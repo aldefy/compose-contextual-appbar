@@ -3,7 +3,9 @@ title: Compose Contextual AppBar
 description: Animated contextual top app bar for Compose Multiplatform
 template: splash
 hero:
-  tagline: Selection-aware top app bar that transitions to a contextual action bar when items are selected. Works on Android, iOS, Desktop, and Web.
+  tagline: The Gmail/Photos/Files multi-select pattern — animated contextual top app bar that Material 3 never shipped. Long-press, select, and watch the toolbar transform.
+  image:
+    html: '<div class="demo-container"><img src="/compose-contextual-appbar/demo/demo.gif" alt="Demo showing contextual app bar transition" width="280" /></div>'
   actions:
     - text: Get Started
       link: /compose-contextual-appbar/getting-started/installation/
@@ -14,107 +16,139 @@ hero:
       variant: minimal
 ---
 
-import { Card, CardGrid, Tabs, TabItem } from '@astrojs/starlight/components';
+import { Card, CardGrid, Tabs, TabItem, Badge } from '@astrojs/starlight/components';
 
-## What Is It?
+## The Problem
 
-`compose-contextual-appbar` provides a top app bar that **switches between a default state and a contextual action mode** when the user selects items. You've seen this in Gmail, Google Photos, and most Google apps — select an email and the toolbar transforms to show delete, archive, and move actions.
+Every Google app — Gmail, Photos, Files, Drive — has the same pattern: **long-press an item, and the top app bar transforms** into a contextual action bar showing the selection count, a close button, and action icons like delete, archive, or share.
 
-This library brings that pattern to Compose Multiplatform with smooth animated transitions, back-press handling, and full Material 3 support.
+Material 3 for Compose has `TopAppBar`. It has `SwipeToDismissBox`. It even has `ActionMode` for Views. But it has **zero support for contextual action bars in Compose**. You're left manually swapping `TopAppBar` content with no animation, no back-press handling, and no structure.
 
-## Quick Install
+## See It in Action
 
-```kotlin
-// build.gradle.kts
-commonMain.dependencies {
-    implementation("io.github.aldefy:contextual-appbar:1.0.0-alpha01")
-}
-```
+<div class="demo-container">
+  <img src="/compose-contextual-appbar/demo/demo.gif" alt="Gmail-style multi-select demo on Pixel 9 Pro Fold" width="320" />
+</div>
 
-## Why Compose Contextual AppBar?
+*Gmail-style inbox demo running on Pixel 9 Pro Fold — long-press to select, tap to toggle, back to clear.*
+
+## Why This Library?
 
 <CardGrid>
-  <Card title="Animated Transitions" icon="rocket">
-    Smooth crossfade between default and contextual states using Compose's `ContentTransform` API. Fully customizable transition spec.
+  <Card title="Drop-In Pattern" icon="rocket">
+    One composable wraps your existing `TopAppBar`. Pass your contextual actions and you're done — animated transitions, back-press handling, and M3 colors included.
   </Card>
   <Card title="Compose Multiplatform" icon="laptop">
-    Works on Android, iOS, JVM Desktop, and WasmJs. Single API, single source set.
+    Works on Android, iOS, JVM Desktop, and WasmJs. Single API, single source set. Back-press handling adapts per platform.
   </Card>
-  <Card title="Two Levels of Abstraction" icon="list-format">
-    Use `MaterialContextualTopAppBar` for Material 3 out-of-the-box, or drop to `ContextualTopAppBar` for a fully custom layout.
+  <Card title="Two API Levels" icon="list-format">
+    **`MaterialContextualTopAppBar`** for batteries-included M3 styling. **`ContextualTopAppBar`** for full custom control — bring your own bars.
   </Card>
-  <Card title="Back Press Handling" icon="approve-check">
-    Built-in back press integration — pressing back while items are selected clears the selection instead of navigating away.
+  <Card title="Production Ready" icon="approve-check">
+    Back press interception on Android, customizable animations, M3 `primaryContainer` theming, and binary-compatible API tracked with `apiCheck`.
   </Card>
 </CardGrid>
 
-## Quick Example
+## Quick Install
 
 <Tabs>
-  <TabItem label="Material (recommended)">
+  <TabItem label="Version Catalog">
+    ```toml
+    # libs.versions.toml
+    [libraries]
+    contextual-appbar = { group = "io.github.aldefy", name = "contextual-appbar", version = "1.0.0-alpha01" }
+    ```
     ```kotlin
-    var selectedIds by remember { mutableStateOf(emptySet<Int>()) }
-
-    Scaffold(
-        topBar = {
-            MaterialContextualTopAppBar(
-                selectedCount = selectedIds.size,
-                onClearSelection = { selectedIds = emptySet() },
-                defaultBar = {
-                    TopAppBar(title = { Text("Inbox") })
-                },
-                contextualActions = {
-                    IconButton(onClick = { /* delete */ }) {
-                        Icon(Icons.Default.Delete, contentDescription = "Delete")
-                    }
-                    IconButton(onClick = { /* archive */ }) {
-                        Icon(Icons.Default.Archive, contentDescription = "Archive")
-                    }
-                }
-            )
-        }
-    ) { padding ->
-        // Your content
+    // build.gradle.kts
+    commonMain.dependencies {
+        implementation(libs.contextual.appbar)
     }
     ```
   </TabItem>
-  <TabItem label="Custom (raw)">
+  <TabItem label="Direct">
     ```kotlin
-    ContextualTopAppBar(
-        selectedCount = selectedIds.size,
-        onClearSelection = { selectedIds = emptySet() },
-        defaultContent = {
-            TopAppBar(title = { Text("Photos") })
-        },
-        contextualContent = { count ->
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("$count selected", modifier = Modifier.weight(1f))
-                IconButton(onClick = { /* share */ }) {
-                    Icon(Icons.Default.Share, contentDescription = "Share")
-                }
-            }
-        }
-    )
+    // build.gradle.kts
+    commonMain.dependencies {
+        implementation("io.github.aldefy:contextual-appbar:1.0.0-alpha01")
+    }
     ```
   </TabItem>
 </Tabs>
 
+## Quick Example
+
+```kotlin
+var selectedIds by remember { mutableStateOf(emptySet<Int>()) }
+
+Scaffold(
+    topBar = {
+        MaterialContextualTopAppBar(
+            selectedCount = selectedIds.size,
+            onClearSelection = { selectedIds = emptySet() },
+            contextualNavigationIcon = {
+                IconButton(onClick = { selectedIds = emptySet() }) {
+                    Icon(Icons.Default.Close, contentDescription = "Clear")
+                }
+            },
+            contextualActions = {
+                IconButton(onClick = { /* archive */ }) {
+                    Icon(Icons.Default.Archive, contentDescription = "Archive")
+                }
+                IconButton(onClick = { /* delete */ }) {
+                    Icon(Icons.Default.Delete, contentDescription = "Delete")
+                }
+            },
+            defaultBar = {
+                TopAppBar(title = { Text("Inbox") })
+            },
+        )
+    }
+) { padding ->
+    LazyColumn(modifier = Modifier.padding(padding)) {
+        items(emails) { email ->
+            EmailRow(
+                email = email,
+                selected = email.id in selectedIds,
+                onLongClick = { selectedIds += email.id },
+                onClick = {
+                    if (selectedIds.isNotEmpty()) {
+                        selectedIds = if (email.id in selectedIds)
+                            selectedIds - email.id else selectedIds + email.id
+                    }
+                }
+            )
+        }
+    }
+}
+```
+
 ## How It Works
 
-The transition is driven by `selectedCount`. When `selectedCount > 0`, the contextual bar fades in. When it returns to `0`, the default bar fades back in.
+The transition is driven by a single value: `selectedCount`.
 
-| State | `selectedCount` | Displayed bar |
-|-------|----------------|---------------|
-| Nothing selected | `0` | `defaultBar` / `defaultContent` |
-| Items selected | `> 0` | Contextual bar with count + actions |
+| State | `selectedCount` | What happens |
+|-------|----------------|--------------|
+| Normal | `0` | Default bar shown |
+| Selecting | `> 0` | Contextual bar crossfades in, back press intercepted |
+| Clearing | Back to `0` | Default bar crossfades back |
+
+Under the hood: `AnimatedContent` with configurable `ContentTransform`, plus platform-specific `BackHandler` (Android intercepts system back, other platforms use the close button).
+
+## Components
+
+| Component | Purpose |
+|-----------|---------|
+| `MaterialContextualTopAppBar` | M3 convenience — wraps `TopAppBar` with `primaryContainer` colors, title slot, action slots |
+| `ContextualTopAppBar` | Raw wrapper — crossfades between any two composables you provide |
+| `ContextualTopAppBarDefaults` | Default colors and animation specs |
+| `ContextualTopAppBarColors` | Immutable color configuration for the contextual state |
+| `ContextualAnimationSpec` | Default crossfade animation (250ms fade) |
 
 ## Platform Support
 
-| Platform | Artifact | Status |
-|----------|----------|--------|
-| Android | `contextual-appbar-android` | Stable |
-| JVM Desktop | `contextual-appbar-jvm` | Stable |
-| iOS arm64 | `contextual-appbar-iosarm64` | Stable |
-| iOS Simulator arm64 | `contextual-appbar-iossimulatorarm64` | Stable |
-| iOS x64 | `contextual-appbar-iosx64` | Stable |
-| WasmJs | `contextual-appbar-wasmjs` | Stable |
+| Platform | Artifact | Back Press |
+|----------|----------|-----------|
+| Android | `contextual-appbar-android` | System back intercepted |
+| JVM Desktop | `contextual-appbar-jvm` | Close button only |
+| iOS | `contextual-appbar-iosarm64` / `iossimulatorarm64` / `iosx64` | Close button only |
+| WasmJs | `contextual-appbar-wasmjs` | Close button only |
