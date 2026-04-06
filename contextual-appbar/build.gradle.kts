@@ -90,7 +90,7 @@ android {
 }
 
 // ========== Maven Publishing + Signing ==========
-val libraryVersion = "1.0.0-alpha01"
+val libraryVersion = "0.1.0"
 val libraryGroup = "io.github.aldefy"
 val libraryArtifact = "contextual-appbar"
 
