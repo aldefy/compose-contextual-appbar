@@ -29,14 +29,13 @@ jobs:
         run: cd contextual-appbar/build/staging-deploy && zip -r ../../../bundle.zip .
       - name: Upload to Maven Central
         run: |
-          RESPONSE=$(curl -s -w "\n%{http_code}" -u "${{ secrets.OSSRH_USERNAME }}:${{ secrets.OSSRH_PASSWORD }}" \
+          HTTP_CODE=$(curl -s -o response.txt -w "%{http_code}" -u "${{ secrets.OSSRH_USERNAME }}:${{ secrets.OSSRH_PASSWORD }}" \
             -F "bundle=@bundle.zip" \
             "https://central.sonatype.com/api/v1/publisher/upload?publishingType=AUTOMATIC")
-          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
-          BODY=$(echo "$RESPONSE" | head -n -1)
+          BODY=$(cat response.txt)
           echo "Response: $BODY (HTTP $HTTP_CODE)"
           if [ "$HTTP_CODE" -ge 400 ]; then
-            echo "::error::Upload failed with HTTP $HTTP_CODE"
+            echo "::error::Upload failed with HTTP $HTTP_CODE: $BODY"
             exit 1
           fi
       - name: Create GitHub Release
