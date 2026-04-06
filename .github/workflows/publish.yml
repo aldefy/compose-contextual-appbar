@@ -26,12 +26,13 @@ jobs:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
       - name: Create bundle zip
-        run: cd contextual-appbar/build/staging-deploy && zip -r ../../../bundle.zip .
+        run: cd contextual-appbar/build/staging-deploy && zip -r ../../../contextual-appbar-${{ github.ref_name }}.zip .
       - name: Upload to Maven Central
         run: |
+          VERSION=${GITHUB_REF_NAME#v}
           HTTP_CODE=$(curl -s -o response.txt -w "%{http_code}" -u "${{ secrets.OSSRH_USERNAME }}:${{ secrets.OSSRH_PASSWORD }}" \
-            -F "bundle=@bundle.zip" \
-            "https://central.sonatype.com/api/v1/publisher/upload?publishingType=AUTOMATIC")
+            -F "bundle=@contextual-appbar-${{ github.ref_name }}.zip" \
+            "https://central.sonatype.com/api/v1/publisher/upload?publishingType=AUTOMATIC&name=contextual-appbar+${VERSION}")
           BODY=$(cat response.txt)
           echo "Response: $BODY (HTTP $HTTP_CODE)"
           if [ "$HTTP_CODE" -ge 400 ]; then
@@ -41,5 +42,5 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: bundle.zip
+          files: contextual-appbar-${{ github.ref_name }}.zip
           generate_release_notes: true
